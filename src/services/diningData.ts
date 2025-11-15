@@ -352,8 +352,8 @@ export function getInsights(hall: DiningHall = 'scott'): string[] {
   
   insights.push(
     isWeekend
-      ? "☕ Quietest: before 9am and after 8pm"
-      : "🌅 Beat the crowd: visit between 2-4pm"
+      ? "Quietest: before 9am and after 8pm"
+      : "Beat the crowd: visit between 2-4pm"
   );
   
   return insights;
