@@ -14,14 +14,6 @@ const dietaryBadges: { [key: string]: string } = {
   GF: "Gluten-Free",
 };
 
-const categoryEmoji: { [key: string]: string } = {
-  entree: "🍽️",
-  side: "🥗",
-  dessert: "🍰",
-  drink: "🥤",
-  salad: "🥬",
-};
-
 export const MenuSection = ({ meal, items, isCurrentMeal = false }: MenuSectionProps) => {
   const groupedItems = items.reduce((acc, item) => {
     if (!acc[item.station]) {
@@ -54,9 +46,6 @@ export const MenuSection = ({ meal, items, isCurrentMeal = false }: MenuSectionP
               {stationItems.map((item, idx) => (
                 <div key={idx} className="flex items-start justify-between gap-2">
                   <div className="flex items-start gap-2 flex-1">
-                    <span className="text-lg mt-0.5">
-                      {categoryEmoji[item.category]}
-                    </span>
                     <span className="text-sm">{item.name}</span>
                   </div>
                   {item.dietary && item.dietary.length > 0 && (
