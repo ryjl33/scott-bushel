@@ -4,13 +4,18 @@ import { BusynessMeter } from "@/components/BusynessMeter";
 import { DiningHallSelector } from "@/components/DiningHallSelector";
 import { getCurrentOccupancy, OccupancyData } from "@/services/diningData";
 import { useDiningHall, DINING_HALLS } from "@/hooks/useDiningHall";
-import { RefreshCw } from "lucide-react";
+import { useNotifications } from "@/hooks/useNotifications";
+import { RefreshCw, Bell, BellOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 const Index = () => {
   const { selectedHall } = useDiningHall();
+  const { preferences } = useNotifications();
   const [occupancy, setOccupancy] = useState<OccupancyData | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const isMonitoringThisHall = preferences.enabled && preferences.selectedHalls.includes(selectedHall);
 
   const fetchData = () => {
     setIsRefreshing(true);
@@ -35,6 +40,13 @@ const Index = () => {
               Data Dining
             </h1>
             <DiningHallSelector />
+            
+            {isMonitoringThisHall && (
+              <Badge variant="secondary" className="mt-3 gap-1.5">
+                <Bell className="w-3 h-3" />
+                Notifications Active
+              </Badge>
+            )}
           </div>
         </div>
       </header>

@@ -1,5 +1,6 @@
 import { Navigation } from "@/components/Navigation";
 import { InsightCard } from "@/components/InsightCard";
+import { NotificationSettings } from "@/components/NotificationSettings";
 import { getInsights } from "@/services/diningData";
 import { useDiningHall, DINING_HALLS } from "@/hooks/useDiningHall";
 import { Lightbulb } from "lucide-react";
@@ -23,6 +24,10 @@ const Insights = () => {
       </header>
 
       <main className="max-w-lg mx-auto px-6 py-6">
+        <div className="mb-6">
+          <NotificationSettings />
+        </div>
+
         <div className="grid gap-4">
           {insights.map((insight, index) => (
             <InsightCard key={index} insight={insight} />
@@ -34,7 +39,7 @@ const Insights = () => {
             <span>🐂</span> Go Buckeyes!
           </h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Data Dining uses aggregated entry and exit data to help you find the perfect time to visit Scott Dining Hall. 
+            Data Dining uses aggregated entry and exit data to help you find the perfect time to visit dining halls. 
             All data is anonymous and used solely to improve your dining experience.
           </p>
         </div>
