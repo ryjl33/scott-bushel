@@ -1,17 +1,20 @@
 import { useState, useEffect } from "react";
 import { Navigation } from "@/components/Navigation";
 import { BusynessMeter } from "@/components/BusynessMeter";
+import { DiningHallSelector } from "@/components/DiningHallSelector";
 import { getCurrentOccupancy, OccupancyData } from "@/services/diningData";
+import { useDiningHall, DINING_HALLS } from "@/hooks/useDiningHall";
 import { RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Index = () => {
+  const { selectedHall } = useDiningHall();
   const [occupancy, setOccupancy] = useState<OccupancyData | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const fetchData = () => {
     setIsRefreshing(true);
-    setOccupancy(getCurrentOccupancy());
+    setOccupancy(getCurrentOccupancy(selectedHall));
     setTimeout(() => setIsRefreshing(false), 500);
   };
 
@@ -20,18 +23,18 @@ const Index = () => {
     // Auto-refresh every 30 seconds
     const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [selectedHall]);
 
   return (
     <div className="min-h-screen bg-background pb-20">
       {/* Header */}
       <header className="bg-gradient-to-b from-primary/5 to-transparent pt-8 pb-4">
         <div className="max-w-lg mx-auto px-6">
-          <div className="text-center mb-2">
-            <h1 className="text-4xl font-bold mb-2 text-gradient">
+          <div className="text-center mb-4">
+            <h1 className="text-4xl font-bold mb-4 text-gradient">
               Data Dining
             </h1>
-            <p className="text-muted-foreground">Scott Dining Hall</p>
+            <DiningHallSelector />
           </div>
         </div>
       </header>

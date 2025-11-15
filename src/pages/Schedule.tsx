@@ -3,6 +3,7 @@ import { Navigation } from "@/components/Navigation";
 import { ForecastCard } from "@/components/ForecastCard";
 import { TrendChart } from "@/components/TrendChart";
 import { MenuSection } from "@/components/MenuSection";
+import { useDiningHall, DINING_HALLS } from "@/hooks/useDiningHall";
 import { 
   getTodayPredictions, 
   getHistoricalTrends, 
@@ -13,12 +14,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar, BarChart3, UtensilsCrossed } from "lucide-react";
 
 const Schedule = () => {
+  const { selectedHall } = useDiningHall();
   const [predictions, setPredictions] = useState<HourlyPrediction[]>([]);
   const [trendView, setTrendView] = useState<'hourly' | 'daily' | 'weekly'>('hourly');
   const [menuData, setMenuData] = useState(getCurrentMenu());
   
   useEffect(() => {
-    setPredictions(getTodayPredictions());
+    setPredictions(getTodayPredictions(selectedHall));
     
     // Update menu every minute
     const menuInterval = setInterval(() => {
@@ -26,9 +28,9 @@ const Schedule = () => {
     }, 60000);
     
     return () => clearInterval(menuInterval);
-  }, []);
+  }, [selectedHall]);
 
-  const trendData = getHistoricalTrends(trendView);
+  const trendData = getHistoricalTrends(trendView, selectedHall);
   const today = new Date().toLocaleDateString('en-US', { 
     weekday: 'long', 
     month: 'long', 
@@ -39,7 +41,7 @@ const Schedule = () => {
     <div className="min-h-screen bg-background pb-20">
       <header className="bg-card border-b border-border sticky top-0 z-10">
         <div className="max-w-lg mx-auto px-6 py-4">
-          <h1 className="text-2xl font-bold">Plan Your Visit</h1>
+          <h1 className="text-2xl font-bold">{DINING_HALLS[selectedHall]}</h1>
           <p className="text-sm text-muted-foreground">{today}</p>
         </div>
       </header>

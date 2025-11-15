@@ -1,6 +1,7 @@
 // Mock dining hall data service
 // Simulates real-time occupancy based on typical dining patterns
 
+export type DiningHall = 'scott' | 'morrill' | 'kennedy';
 export type BusynessLevel = 'low' | 'moderate' | 'busy' | 'packed';
 
 export interface OccupancyData {
@@ -36,7 +37,18 @@ export interface MenuData {
   lastUpdated: Date;
 }
 
-const CAPACITY = 500;
+export interface StationStatus {
+  station: string;
+  waitTime: number; // in minutes
+  foodLevel: 'full' | 'moderate' | 'low';
+  outOfStock: string[];
+}
+
+const CAPACITIES: Record<DiningHall, number> = {
+  scott: 500,
+  morrill: 450,
+  kennedy: 400,
+};
 
 // Typical dining hall patterns
 const WEEKDAY_PATTERN = {
@@ -126,56 +138,65 @@ function getPattern(date: Date = new Date()) {
   return (day === 0 || day === 6) ? WEEKEND_PATTERN : WEEKDAY_PATTERN;
 }
 
-export function getCurrentOccupancy(): OccupancyData {
+export function getCurrentOccupancy(hall: DiningHall = 'scott'): OccupancyData {
   const now = new Date();
   const hour = now.getHours();
   const minutes = now.getMinutes();
   
+  const capacity = CAPACITIES[hall];
   const pattern = getPattern(now);
-  const baseOccupancy = (pattern[hour as keyof typeof pattern] || 0.1) * CAPACITY;
+  const baseOccupancy = (pattern[hour as keyof typeof pattern] || 0.1) * capacity;
   
   // Add some randomness and time-based variation
   const minuteVariation = Math.sin((minutes / 60) * Math.PI) * 0.15;
   const randomVariation = (Math.random() - 0.5) * 0.2;
   
-  const current = Math.round(baseOccupancy * (1 + minuteVariation + randomVariation));
-  const percentage = current / CAPACITY;
+  // Different halls have slightly different patterns
+  const hallModifier = hall === 'scott' ? 1 : hall === 'morrill' ? 0.9 : 0.85;
+  
+  const current = Math.round(baseOccupancy * hallModifier * (1 + minuteVariation + randomVariation));
+  const percentage = current / capacity;
   
   return {
-    current: Math.max(0, Math.min(CAPACITY, current)),
-    capacity: CAPACITY,
+    current: Math.max(0, Math.min(capacity, current)),
+    capacity,
     percentage,
     level: getBusynessLevel(percentage),
     timestamp: now,
   };
 }
 
-export function getTodayPredictions(): HourlyPrediction[] {
+export function getTodayPredictions(hall: DiningHall = 'scott'): HourlyPrediction[] {
   const now = new Date();
   const currentHour = now.getHours();
   const pattern = getPattern(now);
+  const capacity = CAPACITIES[hall];
+  const hallModifier = hall === 'scott' ? 1 : hall === 'morrill' ? 0.9 : 0.85;
   
   const predictions: HourlyPrediction[] = [];
   
   // Generate predictions for remaining hours of the day
   for (let hour = currentHour; hour <= 22; hour++) {
-    const occupancy = Math.round((pattern[hour as keyof typeof pattern] || 0.1) * CAPACITY);
+    const occupancy = Math.round((pattern[hour as keyof typeof pattern] || 0.1) * capacity * hallModifier);
     predictions.push({
       hour,
       occupancy,
-      level: getBusynessLevel(occupancy / CAPACITY),
+      level: getBusynessLevel(occupancy / capacity),
     });
   }
   
   return predictions;
 }
 
-export function getHistoricalTrends(view: 'hourly' | 'daily' | 'weekly' = 'hourly'): HistoricalData[] {
+export function getHistoricalTrends(view: 'hourly' | 'daily' | 'weekly' = 'hourly', hall: DiningHall = 'scott'): HistoricalData[] {
+  const capacity = CAPACITIES[hall];
+  const hallModifier = hall === 'scott' ? 1 : hall === 'morrill' ? 0.9 : 0.85;
+  
   if (view === 'hourly') {
     // Average occupancy by hour across all days
     return Object.entries(WEEKDAY_PATTERN).map(([hour, percentage]) => ({
       hour: parseInt(hour),
-      avgOccupancy: Math.round(percentage * CAPACITY),
+      avgOccupancy: Math.round(percentage * capacity * hallModifier),
     }));
   }
   
@@ -189,7 +210,7 @@ export function getHistoricalTrends(view: 'hourly' | 'daily' | 'weekly' = 'hourl
       return {
         hour: index,
         day,
-        avgOccupancy: Math.round(avgPercentage * CAPACITY),
+        avgOccupancy: Math.round(avgPercentage * capacity * hallModifier),
       };
     });
   }
@@ -205,7 +226,7 @@ export function getHistoricalTrends(view: 'hourly' | 'daily' | 'weekly' = 'hourl
     return {
       hour: i,
       day: date.toLocaleDateString('en-US', { weekday: 'short', month: 'numeric', day: 'numeric' }),
-      avgOccupancy: Math.round(avgPercentage * CAPACITY * (0.9 + Math.random() * 0.2)),
+      avgOccupancy: Math.round(avgPercentage * capacity * hallModifier * (0.9 + Math.random() * 0.2)),
     };
   });
 }
@@ -238,23 +259,100 @@ export function getCurrentMenu(): MenuData {
   };
 }
 
-export function getInsights(): string[] {
+export function getStationStatus(hall: DiningHall = 'scott'): StationStatus[] {
+  const occupancy = getCurrentOccupancy(hall);
+  const menu = getCurrentMenu();
+  
+  // Simulate station wait times based on current occupancy
+  const baseWaitMultiplier = occupancy.level === 'low' ? 0.5 : 
+                             occupancy.level === 'moderate' ? 1 : 
+                             occupancy.level === 'busy' ? 1.5 : 2;
+  
+  const stations = Array.from(new Set(menu.items.map(item => item.station)));
+  
+  return stations.map(station => {
+    const stationItems = menu.items.filter(item => item.station === station);
+    const waitTime = Math.round((2 + Math.random() * 3) * baseWaitMultiplier);
+    
+    // Simulate food levels
+    const foodLevel: 'full' | 'moderate' | 'low' = 
+      occupancy.percentage < 0.3 ? 'full' :
+      occupancy.percentage < 0.7 ? 'moderate' : 'low';
+    
+    // Simulate out of stock items (more likely when busy)
+    const outOfStock: string[] = [];
+    if (occupancy.level === 'busy' || occupancy.level === 'packed') {
+      const randomItems = stationItems.filter(() => Math.random() < 0.2);
+      outOfStock.push(...randomItems.map(item => item.name));
+    }
+    
+    return {
+      station,
+      waitTime,
+      foodLevel,
+      outOfStock,
+    };
+  });
+}
+
+export function getInsights(hall: DiningHall = 'scott'): string[] {
   const now = new Date();
   const day = now.getDay();
   const isWeekend = day === 0 || day === 6;
+  const occupancy = getCurrentOccupancy(hall);
+  const stationStatus = getStationStatus(hall);
   
-  return [
+  const insights: string[] = [];
+  
+  // Current wait time insights
+  const avgWaitTime = Math.round(
+    stationStatus.reduce((sum, s) => sum + s.waitTime, 0) / stationStatus.length
+  );
+  
+  if (avgWaitTime < 3) {
+    insights.push(`⚡ Lightning fast! Average wait time is ${avgWaitTime} min across all stations`);
+  } else if (avgWaitTime < 5) {
+    insights.push(`✅ Quick service today - average ${avgWaitTime} min wait times`);
+  } else {
+    insights.push(`⏱️ Be patient - wait times averaging ${avgWaitTime} min due to ${occupancy.level} crowd`);
+  }
+  
+  // Station-specific insights
+  const fastestStation = stationStatus.reduce((min, s) => s.waitTime < min.waitTime ? s : min);
+  const slowestStation = stationStatus.reduce((max, s) => s.waitTime > max.waitTime ? s : max);
+  
+  if (slowestStation.waitTime > fastestStation.waitTime + 3) {
+    insights.push(`🏃 Skip the line at ${fastestStation.station} (${fastestStation.waitTime} min) vs ${slowestStation.station} (${slowestStation.waitTime} min)`);
+  }
+  
+  // Food availability insights
+  const lowStations = stationStatus.filter(s => s.foodLevel === 'low');
+  if (lowStations.length > 0) {
+    insights.push(`📦 ${lowStations.map(s => s.station).join(', ')} running low - grab it while you can!`);
+  }
+  
+  // Out of stock items
+  const allOutOfStock = stationStatus.flatMap(s => s.outOfStock);
+  if (allOutOfStock.length > 0) {
+    insights.push(`⚠️ Currently out: ${allOutOfStock.slice(0, 3).join(', ')}${allOutOfStock.length > 3 ? '...' : ''}`);
+  } else {
+    insights.push(`✨ Everything in stock! All menu items available right now`);
+  }
+  
+  // Peak time insights
+  insights.push(
     isWeekend 
-      ? "🥞 Weekend brunch hits peak from 11am-1pm"
-      : "🍕 Scott is usually busiest from 6-7pm on weekdays",
-    "😌 Best time to visit? Try 2-4pm for a chill experience",
-    "🐂 Stampede hours are 12-1pm (lunch) and 6-7pm (dinner)",
+      ? "🥞 Weekend brunch peak: 11am-1pm"
+      : "🍕 Typical dinner rush: 6-7pm on weekdays"
+  );
+  
+  insights.push(
     isWeekend
-      ? "☕ Quietest times: before 9am and after 8pm"
-      : "🌅 Early birds (7-9am) avoid the crowds",
-    "📊 Average visit duration: 35 minutes",
-    `${isWeekend ? '🎉' : '📚'} ${isWeekend ? 'Weekends' : 'Weekdays'} average ${isWeekend ? '180' : '220'} daily visits`,
-  ];
+      ? "☕ Quietest: before 9am and after 8pm"
+      : "🌅 Beat the crowd: visit between 2-4pm"
+  );
+  
+  return insights;
 }
 
 export function formatTime(hour: number): string {
