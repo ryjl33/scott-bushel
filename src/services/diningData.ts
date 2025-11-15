@@ -23,6 +23,19 @@ export interface HistoricalData {
   day?: string;
 }
 
+export interface MenuItem {
+  name: string;
+  station: string;
+  category: 'entree' | 'side' | 'dessert' | 'drink' | 'salad';
+  dietary?: string[];
+}
+
+export interface MenuData {
+  meal: 'breakfast' | 'lunch' | 'dinner' | 'late-night';
+  items: MenuItem[];
+  lastUpdated: Date;
+}
+
 const CAPACITY = 500;
 
 // Typical dining hall patterns
@@ -60,6 +73,46 @@ const WEEKEND_PATTERN = {
   20: 0.30,
   21: 0.15,
 };
+
+// Mock menu data
+const BREAKFAST_MENU: MenuItem[] = [
+  { name: "Scrambled Eggs", station: "Hot Bar", category: "entree" },
+  { name: "French Toast", station: "Hot Bar", category: "entree" },
+  { name: "Turkey Sausage", station: "Hot Bar", category: "entree" },
+  { name: "Hash Browns", station: "Hot Bar", category: "side" },
+  { name: "Fresh Fruit", station: "Salad Bar", category: "side", dietary: ["V", "VG"] },
+  { name: "Yogurt Parfait", station: "Salad Bar", category: "dessert", dietary: ["V"] },
+  { name: "Orange Juice", station: "Beverage", category: "drink", dietary: ["V", "VG"] },
+];
+
+const LUNCH_MENU: MenuItem[] = [
+  { name: "Grilled Chicken Breast", station: "Grill", category: "entree" },
+  { name: "Veggie Burger", station: "Grill", category: "entree", dietary: ["V", "VG"] },
+  { name: "Pasta Marinara", station: "Italian", category: "entree", dietary: ["V"] },
+  { name: "Pizza (Pepperoni)", station: "Pizza", category: "entree" },
+  { name: "Caesar Salad", station: "Salad Bar", category: "salad", dietary: ["V"] },
+  { name: "Sweet Potato Fries", station: "Sides", category: "side", dietary: ["V", "VG"] },
+  { name: "Chocolate Chip Cookies", station: "Dessert", category: "dessert", dietary: ["V"] },
+  { name: "Iced Tea", station: "Beverage", category: "drink", dietary: ["V", "VG"] },
+];
+
+const DINNER_MENU: MenuItem[] = [
+  { name: "Beef Stir Fry", station: "Asian Station", category: "entree" },
+  { name: "Tofu Stir Fry", station: "Asian Station", category: "entree", dietary: ["V", "VG"] },
+  { name: "Meatloaf", station: "Hot Bar", category: "entree" },
+  { name: "Mashed Potatoes", station: "Hot Bar", category: "side", dietary: ["V"] },
+  { name: "Steamed Broccoli", station: "Hot Bar", category: "side", dietary: ["V", "VG"] },
+  { name: "Mixed Greens Salad", station: "Salad Bar", category: "salad", dietary: ["V", "VG"] },
+  { name: "Brownie", station: "Dessert", category: "dessert", dietary: ["V"] },
+  { name: "Lemonade", station: "Beverage", category: "drink", dietary: ["V", "VG"] },
+];
+
+const LATE_NIGHT_MENU: MenuItem[] = [
+  { name: "Chicken Tenders", station: "Late Night", category: "entree" },
+  { name: "Mozzarella Sticks", station: "Late Night", category: "side", dietary: ["V"] },
+  { name: "French Fries", station: "Late Night", category: "side", dietary: ["V", "VG"] },
+  { name: "Soft Serve Ice Cream", station: "Dessert", category: "dessert", dietary: ["V"] },
+];
 
 function getBusynessLevel(percentage: number): BusynessLevel {
   if (percentage < 0.3) return 'low';
@@ -155,6 +208,34 @@ export function getHistoricalTrends(view: 'hourly' | 'daily' | 'weekly' = 'hourl
       avgOccupancy: Math.round(avgPercentage * CAPACITY * (0.9 + Math.random() * 0.2)),
     };
   });
+}
+
+export function getCurrentMenu(): MenuData {
+  const now = new Date();
+  const hour = now.getHours();
+  
+  let meal: MenuData['meal'];
+  let items: MenuItem[];
+  
+  if (hour >= 7 && hour < 11) {
+    meal = 'breakfast';
+    items = BREAKFAST_MENU;
+  } else if (hour >= 11 && hour < 16) {
+    meal = 'lunch';
+    items = LUNCH_MENU;
+  } else if (hour >= 16 && hour < 22) {
+    meal = 'dinner';
+    items = DINNER_MENU;
+  } else {
+    meal = 'late-night';
+    items = LATE_NIGHT_MENU;
+  }
+  
+  return {
+    meal,
+    items,
+    lastUpdated: now,
+  };
 }
 
 export function getInsights(): string[] {

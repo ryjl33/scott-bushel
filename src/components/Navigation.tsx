@@ -1,10 +1,9 @@
 import { NavLink } from "@/components/NavLink";
-import { Home, TrendingUp, BarChart3, Lightbulb } from "lucide-react";
+import { Home, CalendarClock, Lightbulb } from "lucide-react";
 
 const navItems = [
   { to: "/", icon: Home, label: "Live" },
-  { to: "/forecast", icon: TrendingUp, label: "Forecast" },
-  { to: "/trends", icon: BarChart3, label: "Trends" },
+  { to: "/schedule", icon: CalendarClock, label: "Schedule" },
   { to: "/insights", icon: Lightbulb, label: "Insights" },
 ];
 
