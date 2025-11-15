@@ -2,32 +2,22 @@ import { useState, useEffect } from "react";
 import { Navigation } from "@/components/Navigation";
 import { ForecastCard } from "@/components/ForecastCard";
 import { TrendChart } from "@/components/TrendChart";
-import { MenuSection } from "@/components/MenuSection";
 import { useDiningHall, DINING_HALLS } from "@/hooks/useDiningHall";
 import { 
   getTodayPredictions, 
   getHistoricalTrends, 
-  getCurrentMenu,
   HourlyPrediction 
 } from "@/services/diningData";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, BarChart3, UtensilsCrossed } from "lucide-react";
+import { Calendar, BarChart3 } from "lucide-react";
 
 const Schedule = () => {
   const { selectedHall } = useDiningHall();
   const [predictions, setPredictions] = useState<HourlyPrediction[]>([]);
   const [trendView, setTrendView] = useState<'hourly' | 'daily' | 'weekly'>('hourly');
-  const [menuData, setMenuData] = useState(getCurrentMenu());
   
   useEffect(() => {
     setPredictions(getTodayPredictions(selectedHall));
-    
-    // Update menu every minute
-    const menuInterval = setInterval(() => {
-      setMenuData(getCurrentMenu());
-    }, 60000);
-    
-    return () => clearInterval(menuInterval);
   }, [selectedHall]);
 
   const trendData = getHistoricalTrends(trendView, selectedHall);
@@ -48,7 +38,7 @@ const Schedule = () => {
 
       <main className="max-w-lg mx-auto px-6 py-6">
         <Tabs defaultValue="forecast" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="forecast" className="flex items-center gap-1.5">
               <Calendar className="w-4 h-4" />
               <span>Forecast</span>
@@ -56,10 +46,6 @@ const Schedule = () => {
             <TabsTrigger value="trends" className="flex items-center gap-1.5">
               <BarChart3 className="w-4 h-4" />
               <span>Trends</span>
-            </TabsTrigger>
-            <TabsTrigger value="menu" className="flex items-center gap-1.5">
-              <UtensilsCrossed className="w-4 h-4" />
-              <span>Menu</span>
             </TabsTrigger>
           </TabsList>
 
@@ -103,10 +89,6 @@ const Schedule = () => {
                 </p>
               </TabsContent>
             </Tabs>
-          </TabsContent>
-
-          <TabsContent value="menu" className="mt-0">
-            <MenuSection meal={menuData.meal} items={menuData.items} />
           </TabsContent>
         </Tabs>
       </main>
