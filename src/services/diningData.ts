@@ -87,7 +87,7 @@ const WEEKEND_PATTERN = {
 };
 
 // Mock menu data
-const BREAKFAST_MENU: MenuItem[] = [
+export const BREAKFAST_MENU: MenuItem[] = [
   { name: "Scrambled Eggs", station: "Hot Bar", category: "entree" },
   { name: "French Toast", station: "Hot Bar", category: "entree" },
   { name: "Turkey Sausage", station: "Hot Bar", category: "entree" },
@@ -97,7 +97,7 @@ const BREAKFAST_MENU: MenuItem[] = [
   { name: "Orange Juice", station: "Beverage", category: "drink", dietary: ["V", "VG"] },
 ];
 
-const LUNCH_MENU: MenuItem[] = [
+export const LUNCH_MENU: MenuItem[] = [
   { name: "Grilled Chicken Breast", station: "Grill", category: "entree" },
   { name: "Veggie Burger", station: "Grill", category: "entree", dietary: ["V", "VG"] },
   { name: "Pasta Marinara", station: "Italian", category: "entree", dietary: ["V"] },
@@ -108,7 +108,7 @@ const LUNCH_MENU: MenuItem[] = [
   { name: "Iced Tea", station: "Beverage", category: "drink", dietary: ["V", "VG"] },
 ];
 
-const DINNER_MENU: MenuItem[] = [
+export const DINNER_MENU: MenuItem[] = [
   { name: "Beef Stir Fry", station: "Asian Station", category: "entree" },
   { name: "Tofu Stir Fry", station: "Asian Station", category: "entree", dietary: ["V", "VG"] },
   { name: "Meatloaf", station: "Hot Bar", category: "entree" },
@@ -119,7 +119,7 @@ const DINNER_MENU: MenuItem[] = [
   { name: "Lemonade", station: "Beverage", category: "drink", dietary: ["V", "VG"] },
 ];
 
-const LATE_NIGHT_MENU: MenuItem[] = [
+export const LATE_NIGHT_MENU: MenuItem[] = [
   { name: "Chicken Tenders", station: "Late Night", category: "entree" },
   { name: "Mozzarella Sticks", station: "Late Night", category: "side", dietary: ["V"] },
   { name: "French Fries", station: "Late Night", category: "side", dietary: ["V", "VG"] },
