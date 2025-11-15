@@ -32,7 +32,7 @@ export interface MenuItem {
 }
 
 export interface MenuData {
-  meal: 'breakfast' | 'lunch' | 'dinner' | 'late-night';
+  meal: 'Breakfast' | 'Lunch' | 'Dinner' | 'Late Night';
   items: MenuItem[];
   lastUpdated: Date;
 }
@@ -238,17 +238,21 @@ export function getCurrentMenu(): MenuData {
   let meal: MenuData['meal'];
   let items: MenuItem[];
   
+  // Breakfast: until 11 AM
+  // Lunch: 11 AM - 4 PM
+  // Dinner: 4 PM - Closing (10 PM)
+  // Late Night: After 10 PM
   if (hour >= 7 && hour < 11) {
-    meal = 'breakfast';
+    meal = 'Breakfast';
     items = BREAKFAST_MENU;
   } else if (hour >= 11 && hour < 16) {
-    meal = 'lunch';
+    meal = 'Lunch';
     items = LUNCH_MENU;
   } else if (hour >= 16 && hour < 22) {
-    meal = 'dinner';
+    meal = 'Dinner';
     items = DINNER_MENU;
   } else {
-    meal = 'late-night';
+    meal = 'Late Night';
     items = LATE_NIGHT_MENU;
   }
   
