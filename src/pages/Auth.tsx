@@ -70,7 +70,7 @@ const Auth = () => {
               <Input
                 id="email"
                 type="email"
-                placeholder="your@email.com"
+                placeholder="name.#"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
