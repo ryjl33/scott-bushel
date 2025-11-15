@@ -63,7 +63,11 @@ const Menu = () => {
           
           {allMenus.map((menu) => (
             <TabsContent key={menu.meal} value={menu.meal}>
-              <MenuSection meal={menu.meal} items={menu.items} />
+              <MenuSection 
+                meal={menu.meal} 
+                items={menu.items} 
+                isCurrentMeal={menu.meal === currentMeal}
+              />
             </TabsContent>
           ))}
         </Tabs>
