@@ -1,10 +1,12 @@
 import { Navigation } from "@/components/Navigation";
 import { InsightCard } from "@/components/InsightCard";
 import { getInsights } from "@/services/diningData";
+import { useDiningHall, DINING_HALLS } from "@/hooks/useDiningHall";
 import { Lightbulb } from "lucide-react";
 
 const Insights = () => {
-  const insights = getInsights();
+  const { selectedHall } = useDiningHall();
+  const insights = getInsights(selectedHall);
 
   return (
     <div className="min-h-screen bg-background pb-20">
@@ -15,7 +17,7 @@ const Insights = () => {
             <h1 className="text-2xl font-bold">Smart Insights</h1>
           </div>
           <p className="text-sm text-muted-foreground mt-1">
-            Data-driven tips for the best dining experience
+            {DINING_HALLS[selectedHall]} - Real-time tips
           </p>
         </div>
       </header>
