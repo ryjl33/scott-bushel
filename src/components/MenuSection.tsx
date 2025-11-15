@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 interface MenuSectionProps {
   meal: string;
   items: MenuItem[];
+  isCurrentMeal?: boolean;
 }
 
 const dietaryBadges: { [key: string]: string } = {
@@ -21,7 +22,7 @@ const categoryEmoji: { [key: string]: string } = {
   salad: "🥬",
 };
 
-export const MenuSection = ({ meal, items }: MenuSectionProps) => {
+export const MenuSection = ({ meal, items, isCurrentMeal = false }: MenuSectionProps) => {
   const groupedItems = items.reduce((acc, item) => {
     if (!acc[item.station]) {
       acc[item.station] = [];
@@ -36,9 +37,11 @@ export const MenuSection = ({ meal, items }: MenuSectionProps) => {
         <h2 className="text-xl font-bold capitalize">
           {meal === 'late-night' ? 'Late Night' : meal}
         </h2>
-        <Badge variant="secondary" className="text-xs">
-          Now Serving
-        </Badge>
+        {isCurrentMeal && (
+          <Badge variant="secondary" className="text-xs">
+            Now Serving
+          </Badge>
+        )}
       </div>
 
       {Object.entries(groupedItems).map(([station, stationItems]) => (
