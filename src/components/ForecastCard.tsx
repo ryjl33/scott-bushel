@@ -6,13 +6,6 @@ interface ForecastCardProps {
   prediction: HourlyPrediction;
 }
 
-const levelEmoji = {
-  low: "😌",
-  moderate: "👥",
-  busy: "🏃",
-  packed: "🐂",
-};
-
 const levelColor = {
   low: "busyness-low",
   moderate: "busyness-moderate",
@@ -29,7 +22,6 @@ export const ForecastCard = ({ prediction }: ForecastCardProps) => {
             <Clock className="w-4 h-4 text-muted-foreground" />
             <span className="font-semibold">{formatTime(prediction.hour)}</span>
           </div>
-          <span className="text-2xl">{levelEmoji[prediction.level]}</span>
         </div>
         
         <div className="mb-2">

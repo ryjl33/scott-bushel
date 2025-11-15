@@ -68,8 +68,8 @@ const Index = () => {
 
             {/* Quick Tips */}
             <div className="mt-8 p-6 bg-card rounded-2xl border border-border">
-              <h2 className="font-bold mb-3 flex items-center gap-2">
-                <span>💡</span> Quick Tip
+              <h2 className="font-bold mb-3">
+                Quick Tip
               </h2>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 {occupancy.level === 'low' && "Perfect time to visit! Grab your favorite spot."}

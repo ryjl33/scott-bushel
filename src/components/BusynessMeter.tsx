@@ -8,25 +8,21 @@ interface BusynessMeterProps {
 const levelConfig = {
   low: {
     label: "Chill right now",
-    emoji: "😌",
     color: "hsl(var(--busyness-low))",
     bgColor: "hsl(var(--busyness-low) / 0.1)",
   },
   moderate: {
     label: "Getting busy",
-    emoji: "👥",
     color: "hsl(var(--busyness-moderate))",
     bgColor: "hsl(var(--busyness-moderate) / 0.1)",
   },
   busy: {
     label: "Pretty packed",
-    emoji: "🏃",
     color: "hsl(var(--busyness-busy))",
     bgColor: "hsl(var(--busyness-busy) / 0.1)",
   },
   packed: {
     label: "Stampede hours!",
-    emoji: "🐂",
     color: "hsl(var(--busyness-packed))",
     bgColor: "hsl(var(--busyness-packed) / 0.1)",
   },
@@ -67,7 +63,6 @@ export const BusynessMeter = ({ data }: BusynessMeterProps) => {
 
         {/* Center Content */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <div className="text-6xl mb-2">{config.emoji}</div>
           <div className="text-4xl font-bold" style={{ color: config.color }}>
             {data.current}
           </div>
