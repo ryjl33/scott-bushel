@@ -1,4 +1,4 @@
-import { Home, CalendarClock, Lightbulb, LogOut } from "lucide-react";
+import { Home, CalendarClock, Lightbulb, UtensilsCrossed, LogOut } from "lucide-react";
 import { NavLink } from "./NavLink";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -39,6 +39,14 @@ export const Navigation = () => {
         >
           <Lightbulb className="w-5 h-5" />
           <span className="text-xs font-medium">Insights</span>
+        </NavLink>
+        <NavLink
+          to="/menu"
+          className="flex flex-col items-center justify-center gap-1 px-4 py-2 rounded-lg transition-colors text-muted-foreground"
+          activeClassName="text-primary bg-primary/10"
+        >
+          <UtensilsCrossed className="w-5 h-5" />
+          <span className="text-xs font-medium">Menu</span>
         </NavLink>
         {(user || isGuest) && (
           <Button
