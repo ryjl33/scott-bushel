@@ -314,11 +314,11 @@ export function getInsights(hall: DiningHall = 'scott'): string[] {
   );
   
   if (avgWaitTime < 3) {
-    insights.push(`⚡ Lightning fast! Average wait time is ${avgWaitTime} min across all stations`);
+    insights.push(`Lightning fast! Average wait time is ${avgWaitTime} min across all stations`);
   } else if (avgWaitTime < 5) {
-    insights.push(`✅ Quick service today - average ${avgWaitTime} min wait times`);
+    insights.push(`Quick service today - average ${avgWaitTime} min wait times`);
   } else {
-    insights.push(`⏱️ Be patient - wait times averaging ${avgWaitTime} min due to ${occupancy.level} crowd`);
+    insights.push(`Be patient - wait times averaging ${avgWaitTime} min due to ${occupancy.level} crowd`);
   }
   
   // Station-specific insights
@@ -326,28 +326,28 @@ export function getInsights(hall: DiningHall = 'scott'): string[] {
   const slowestStation = stationStatus.reduce((max, s) => s.waitTime > max.waitTime ? s : max);
   
   if (slowestStation.waitTime > fastestStation.waitTime + 3) {
-    insights.push(`🏃 Skip the line at ${fastestStation.station} (${fastestStation.waitTime} min) vs ${slowestStation.station} (${slowestStation.waitTime} min)`);
+    insights.push(`Skip the line at ${fastestStation.station} (${fastestStation.waitTime} min) vs ${slowestStation.station} (${slowestStation.waitTime} min)`);
   }
   
   // Food availability insights
   const lowStations = stationStatus.filter(s => s.foodLevel === 'low');
   if (lowStations.length > 0) {
-    insights.push(`📦 ${lowStations.map(s => s.station).join(', ')} running low - grab it while you can!`);
+    insights.push(`${lowStations.map(s => s.station).join(', ')} running low - grab it while you can!`);
   }
   
   // Out of stock items
   const allOutOfStock = stationStatus.flatMap(s => s.outOfStock);
   if (allOutOfStock.length > 0) {
-    insights.push(`⚠️ Currently out: ${allOutOfStock.slice(0, 3).join(', ')}${allOutOfStock.length > 3 ? '...' : ''}`);
+    insights.push(`Currently out: ${allOutOfStock.slice(0, 3).join(', ')}${allOutOfStock.length > 3 ? '...' : ''}`);
   } else {
-    insights.push(`✨ Everything in stock! All menu items available right now`);
+    insights.push(`Everything in stock! All menu items available right now`);
   }
   
   // Peak time insights
   insights.push(
     isWeekend 
-      ? "🥞 Weekend brunch peak: 11am-1pm"
-      : "🍕 Typical dinner rush: 6-7pm on weekdays"
+      ? "Weekend brunch peak: 11am-1pm"
+      : "Typical dinner rush: 6-7pm on weekdays"
   );
   
   insights.push(
