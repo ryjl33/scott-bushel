@@ -8,70 +8,59 @@ import { useNotifications } from "@/hooks/useNotifications";
 import { RefreshCw, Bell, BellOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-
 const Index = () => {
-  const { selectedHall } = useDiningHall();
-  const { preferences } = useNotifications();
+  const {
+    selectedHall
+  } = useDiningHall();
+  const {
+    preferences
+  } = useNotifications();
   const [occupancy, setOccupancy] = useState<OccupancyData | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
-
   const isMonitoringThisHall = preferences.enabled && preferences.selectedHalls.includes(selectedHall);
-
   const fetchData = () => {
     setIsRefreshing(true);
     setOccupancy(getCurrentOccupancy(selectedHall));
     setTimeout(() => setIsRefreshing(false), 500);
   };
-
   useEffect(() => {
     fetchData();
     // Auto-refresh every 30 seconds
     const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
   }, [selectedHall]);
-
-  return (
-    <div className="min-h-screen bg-background pb-20">
+  return <div className="min-h-screen bg-background pb-20">
       {/* Header */}
       <header className="bg-gradient-to-b from-primary/5 to-transparent pt-8 pb-4">
         <div className="max-w-lg mx-auto px-6">
           <div className="text-center mb-4">
             <h1 className="text-4xl font-bold mb-4 text-gradient">
-              Data Dining
+              Data Dine
             </h1>
             <DiningHallSelector />
             
-            {isMonitoringThisHall && (
-              <Badge variant="secondary" className="mt-3 gap-1.5">
+            {isMonitoringThisHall && <Badge variant="secondary" className="mt-3 gap-1.5">
                 <Bell className="w-3 h-3" />
                 Notifications Active
-              </Badge>
-            )}
+              </Badge>}
           </div>
         </div>
       </header>
 
       {/* Main Content */}
       <main className="max-w-lg mx-auto px-6 py-8">
-        {occupancy && (
-          <>
+        {occupancy && <>
             <BusynessMeter data={occupancy} />
 
             {/* Last Updated */}
             <div className="mt-8 flex items-center justify-center gap-4">
               <p className="text-sm text-muted-foreground">
-                Updated {occupancy.timestamp.toLocaleTimeString('en-US', { 
-                  hour: 'numeric', 
-                  minute: '2-digit' 
-                })}
+                Updated {occupancy.timestamp.toLocaleTimeString('en-US', {
+              hour: 'numeric',
+              minute: '2-digit'
+            })}
               </p>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={fetchData}
-                disabled={isRefreshing}
-                className="gap-2"
-              >
+              <Button variant="ghost" size="sm" onClick={fetchData} disabled={isRefreshing} className="gap-2">
                 <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
                 Refresh
               </Button>
@@ -89,13 +78,10 @@ const Index = () => {
                 {occupancy.level === 'packed' && "Peak rush hour! Check back in an hour for a calmer experience."}
               </p>
             </div>
-          </>
-        )}
+          </>}
       </main>
 
       <Navigation />
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
