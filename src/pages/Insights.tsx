@@ -62,86 +62,8 @@ const Insights = () => {
         </div>
 
         <div className="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20">
-          <h2 className="font-bold text-lg mb-2 flex items-center gap-2">Go Buckeyes!
-
-
-
- 
- 
- 
- 
-  
-  
-  
-  
-   
-   
-   
-   
-    
-    
-    
-    
-    
-
-    
-
-    
-
-    
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          <span>
-          </span> Go Buckeyes!
+          <h2 className="font-bold text-lg mb-2">
+            Go Buckeyes!
           </h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
             Data Dining uses aggregated entry and exit data to help you find the perfect time to visit dining halls. 
