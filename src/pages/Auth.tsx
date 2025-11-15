@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { UtensilsCrossed } from 'lucide-react';
+import dataDineLogo from '@/assets/data-dine-logo.png';
 const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
@@ -50,7 +51,7 @@ const Auth = () => {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
-            <UtensilsCrossed className="w-12 h-12 text-primary" />
+            <img src={dataDineLogo} alt="Data Dine Logo" className="w-20 h-20" />
           </div>
           <CardTitle className="text-2xl">Data Dine</CardTitle>
           <CardDescription>

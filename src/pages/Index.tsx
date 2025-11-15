@@ -8,6 +8,7 @@ import { useNotifications } from "@/hooks/useNotifications";
 import { RefreshCw, Bell, BellOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import dataDineLogo from "@/assets/data-dine-logo.png";
 const Index = () => {
   const {
     selectedHall
@@ -34,6 +35,7 @@ const Index = () => {
       <header className="bg-gradient-to-b from-primary/5 to-transparent pt-8 pb-4">
         <div className="max-w-lg mx-auto px-6">
           <div className="text-center mb-4">
+            <img src={dataDineLogo} alt="Data Dine Logo" className="w-24 h-24 mx-auto mb-4" />
             <h1 className="text-4xl font-bold mb-4 text-gradient">
               Data Dine
             </h1>
