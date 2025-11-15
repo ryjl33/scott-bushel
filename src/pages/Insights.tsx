@@ -1,13 +1,16 @@
 import { Navigation } from "@/components/Navigation";
 import { InsightCard } from "@/components/InsightCard";
 import { NotificationSettings } from "@/components/NotificationSettings";
-import { getInsights } from "@/services/diningData";
+import { getInsights, getStationStatus } from "@/services/diningData";
 import { useDiningHall, DINING_HALLS } from "@/hooks/useDiningHall";
-import { Lightbulb } from "lucide-react";
+import { Lightbulb, Clock } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 const Insights = () => {
   const { selectedHall } = useDiningHall();
   const insights = getInsights(selectedHall);
+  const stations = getStationStatus(selectedHall);
 
   return (
     <div className="min-h-screen bg-background pb-20">
@@ -27,6 +30,37 @@ const Insights = () => {
         <div className="mb-6">
           <NotificationSettings />
         </div>
+
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Clock className="w-5 h-5 text-primary" />
+              Current Wait Times
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {stations.map((station, index) => (
+              <div key={index} className="flex justify-between items-center">
+                <div className="flex-1">
+                  <p className="font-medium">{station.station}</p>
+                  <div className="flex gap-2 mt-1">
+                    <Badge variant={station.waitTime > 5 ? "destructive" : "default"}>
+                      {station.waitTime} min wait
+                    </Badge>
+                    <Badge variant={station.foodLevel === 'low' ? "destructive" : station.foodLevel === 'moderate' ? "secondary" : "default"}>
+                      Food: {station.foodLevel}
+                    </Badge>
+                    {station.outOfStock.length > 0 && (
+                      <Badge variant="outline">
+                        {station.outOfStock.length} out of stock
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
 
         <div className="grid gap-4">
           {insights.map((insight, index) => (
